@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="row pt-2 pb-2">
+    <div class="col-sm-9">
+        <h4 class="page-title">
+            @*Başlık*@ Kategori Ekleme Sayfası
+        </h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+                @*Detay*@ Bu sayfa üzerinde kategori ekleyebilir ve ilgili bilgilerini girebilirsiniz.
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-3">
+        <div class="btn-group float-sm-right">
+            <a href="/Kategoriler/Listele/" class="btn btn-light">
+                <i class="fa fa-list"></i>
+                @*Button*@ Listeye Git
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<form action="/Kategoriler/YeniKategoriKaydet/" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="form-header text-uppercase">
+                        <i class="fa fa-info"></i>
+                        @*Başlık*@ Kategori Bilgilerini Girebilirsiniz.
+                    </h4>
+                    <div class="row">
+
+                        <div class="form-group col-lg-12">
+                            <label>Kategori Adı</label>
+                            <input type="text" class="form-control" name="Ad">
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label>Kategori Açıklaması</label>
+                            <textarea rows="4" class="form-control" id="basic-textarea" name="Aciklama"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="form-footer">
+                        <button type="submit" class="btn btn-light"><i class="fa fa-save"></i> Kaydet </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

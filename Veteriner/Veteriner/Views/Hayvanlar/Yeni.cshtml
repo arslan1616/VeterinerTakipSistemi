@@ -1,0 +1,102 @@
+﻿@using Veteriner.DataBase;
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+    ApplicationConnectionDb db = new ApplicationConnectionDb();
+
+}
+
+
+<div class="row pt-2 pb-2">
+    <div class="col-sm-9">
+        <h4 class="page-title">
+            @*Başlık*@ Yeni Hayvan Ekle
+        </h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+                @*Detay*@ Bu sayfa üzerinden hayvanları ve ilgili bilgilerini ekleyebilirsiniz.
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-3">
+        <div class="btn-group float-sm-right">
+            <a href="/Hayvanlar/Listele/" class="btn btn-light">
+                <i class="fa fa-list"></i>
+                @*Button*@ Listeye Git
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+<form action="/Hayvanlar/YeniHayvanKayit/" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="form-header text-uppercase">
+                        <i class="fa fa-plus"></i>
+                        @*Başlık*@ Yeni bir hayvan ekleyebilirsiniz.
+                    </h4>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label>Hayvanın Sahibini Seçiniz</label>
+                            <select class="form-control single-select select2-hidden-accessible" name="KisiId" required>
+                                <option></option>
+                                @foreach (Kisi item in db.Kisi.ToList())
+                                {
+                                    <option value="@item.id">@item.Ad @item.Soyad</option>
+
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Hayvan Kategorisini Seçiniz</label>
+                            <select class="form-control single-select select2-hidden-accessible" name="KategoriId" required>
+                                <option></option>
+                                @foreach (Kategori item in db.Kategori.ToList())
+                                {
+                                    <option value="@item.id">@item.Ad - @item.Aciklama</option>
+
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Doğum Yılı</label>
+                            <input type="date" class="form-control" name="DogumTarihi" required>
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Hayvanın Cinsi</label>
+                            <input type="text" class="form-control" name="Cinsi" required>
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Hayvanın Adı</label>
+                            <input type="text" class="form-control" name="Adi" required>
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Hayvanın Kimlik Numarası</label>
+                            <input type="text" class="form-control" name="KimlikNo" required>
+                        </div>
+
+                        <div class="form-group col-lg-12">
+                            <label>Hayvan Hakkında Alınan Notlar</label>
+                            <textarea rows="8" class="form-control" id="basic-textarea" name="NotBilgisi"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="form-footer">
+                        <button type="submit" class="btn btn-light"><i class="fa fa-save"></i> Kaydet </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

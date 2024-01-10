@@ -1,0 +1,185 @@
+﻿@using Veteriner.DataBase;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ApplicationConnectionDb db = new ApplicationConnectionDb();
+}
+<div class="row pt-2 pb-2">
+    <div class="col-sm-9">
+        <h4 class="page-title">
+            @*Başlık*@ Kişi Listeleme Sayfası
+        </h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+                @*Detay*@ Bu sayfa üzerinde yeni bir kişi ve bilgilerini listeleyebilirsiniz.
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-3">
+        <div class="btn-group float-sm-right">
+            <a href="/Kisiler/Yeni/" class="btn btn-light">
+                <i class="fa fa-plus"></i>
+                @*Button*@ Yeni Ekle
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header"><i class="fa fa-building"></i> Kişilerin Listesi</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="default-datatable" class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Ad</th>
+                                <th scope="col">Soyad</th>
+                                <th scope="col">Telefon</th>
+                                <th scope="col">Mail</th>
+                                <th scope="col">Adres</th>
+                                <th scope="col">İşlemler</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Kisi item in db.Kisi.ToList())
+                            {
+                                string duz = "duz" + item.id; 
+                                string sil = "sil" + item.id;
+                                <tr>
+                                    <td scope="row">@item.id</td>
+                                    <td scope="row">@item.Ad</td>
+                                    <td scope="row">@item.Soyad</td>
+                                    <td scope="row">@item.Telefon</td>
+                                    <td scope="row">@item.Mail</td>
+                                    <td scope="row">@item.Adres</td>
+                                    <td scope="row">
+                                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#@duz">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#@sil">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@foreach (Kisi item in db.Kisi.ToList())
+{
+    string duz = "duz" + item.id;
+    string sil = "sil" + item.id;
+
+    <div class="modal fade" id="@duz">
+        <div class="modal-dialog modal-lg">
+            <form action="/Kisiler/KisiDuzenle/" method="post">
+                <input type="text" class="form-control" value="@item.id" name="id" hidden>
+                <div class="modal-content border-success">
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title text-white"> Kişi Düzenleme Modalı</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="form-group col-lg-6">
+                            <label>Ad</label>
+                            <input type="text" class="form-control" value="@item.Ad" name="Ad">
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Soyad</label>
+                            <input type="text" class="form-control" value="@item.Soyad" name="Soyad">
+                        </div>
+                        <hr />
+                        <div class="form-group col-lg-6">
+                            <label>Telefon</label>
+                            <input type="text" class="form-control" value="@item.Telefon" name="Telefon">
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Mail</label>
+                            <input type="text" class="form-control" value="@item.Mail" name="Mail">
+                        </div>
+                        <hr />
+                        <div class="form-group col-lg-12">
+                            <label>Açık Adres Bilgisi</label>
+                            <textarea rows="4" class="form-control" id="basic-textarea" name="Adres">@item.Adres</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times"></i> Kapat</button>
+                    <button type="submit" class="btn btn-success"><i class="fa fa-check-square-o"></i> Kaydet </button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+  
+    
+    <div class="modal fade" id="@sil">
+        <div class="modal-dialog modal-lg">
+            <form action="/Kisiler/KisiSil/" method="post">
+                <input type="text" class="form-control" value="@item.id" name="id" hidden>
+                <div class="modal-content border-success">
+                    <div class="modal-header bg-success">
+                        <h5 class="modal-title text-white"> Kişi Kalıcı Olarak Silinecektir</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+
+                            <div class="form-group col-lg-6">
+                                <label>Ad</label>
+                                <input type="text" class="form-control" value="@item.Ad" name="Ad" readonly>
+                            </div>
+
+                            <div class="form-group col-lg-6">
+                                <label>Soyad</label>
+                                <input type="text" class="form-control" value="@item.Soyad" name="Soyad" readonly>
+                            </div>
+                            <hr />
+                            <div class="form-group col-lg-6">
+                                <label>Telefon</label>
+                                <input type="text" class="form-control" value="@item.Telefon" name="Telefon" readonly>
+                            </div>
+
+                            <div class="form-group col-lg-6">
+                                <label>Mail</label>
+                                <input type="text" class="form-control" value="@item.Mail" name="Mail" readonly>
+                            </div>
+                            <hr />
+                            <div class="form-group col-lg-12">
+                                <label>Açık Adres Bilgisi</label>
+                                <textarea rows="4" class="form-control" id="basic-textarea" name="Adres" readonly>@item.Adres</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times"></i> Kapat</button>
+                        <button type="submit" class="btn btn-danger"><i class="fa fa-check-square-o"></i> Kalıcı Olarak Sil </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+}

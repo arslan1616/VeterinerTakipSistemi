@@ -1,0 +1,240 @@
+﻿@using Veteriner.DataBase;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ApplicationConnectionDb db = new ApplicationConnectionDb();
+}
+<div class="row pt-2 pb-2">
+    <div class="col-sm-9">
+        <h4 class="page-title">
+            @*Başlık*@ Hayvanların Listesi
+        </h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+                @*Detay*@ Bu sayfa üzerinden hayvanları ve ilgili bilgileri listeleyebilirsiniz.
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-3">
+        <div class="btn-group float-sm-right">
+            <a href="/Hayvanlar/Yeni/" class="btn btn-light">
+                <i class="fa fa-plus"></i>
+                @*Button*@ Yeni Ekle
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header"><i class="fa fa-building"></i> Hayvanların Listesi</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="default-datatable" class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Hayvan Sahibi</th>
+                                <th scope="col">Kategorisi</th>
+                                <th scope="col">Adı</th>
+                                <th scope="col">Kimlik Numarası</th>
+                                <th scope="col">Doğum Tarihi</th>
+                                <th scope="col">
+                                    İşlemler
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Hayvan item in db.Hayvan.ToList())
+                            {
+                                string duzenle = "Duzenle" + item.id;
+                                string Sil = "Sil" + item.id;
+
+                                <tr>
+                                    <td scope="row">
+                                        @item.id
+                                    </td>
+                                    <td scope="row">
+                                        @db.Kisi.FirstOrDefault(x=> x.id == item.KisiId).Ad
+                                        @db.Kisi.FirstOrDefault(x=> x.id == item.KisiId).Soyad
+                                    </td>
+                                    <td scope="row">
+                                        @db.Kategori.FirstOrDefault(x=> x.id == item.KategoriId).Ad
+                                    </td>
+                                    <td scope="row">@item.Adi</td>
+                                    <td scope="row">@item.KimlikNo</td>
+                                    <td scope="row">@Convert.ToDateTime(item.DogumTarihi).ToShortDateString()</td>
+                                    <td scope="row">
+                                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#@duzenle">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <div class="modal fade" id="@duzenle">
+                                            <div class="modal-dialog modal-lg">
+                                                <form action="/Hayvanlar/HayvanDuzenle/" method="post">
+                                                    <input type="text" class="form-control" value="@item.id" name="id" hidden>
+
+                                                <div class="modal-content border-success">
+                                                    <div class="modal-header bg-success">
+                                                        <h5 class="modal-title text-white">@item.Adi bilgilerini düzenleyebilirsiniz.</h5>
+                                                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="container">
+                                                    <div class="row">
+                                                        <div class="form-group col-6">
+                                                            <label>Hayvanın Sahibini Seçiniz</label>
+                                                            <select class="form-control single-select select2-hidden-accessible" name="KisiId" required>
+                                                                    <option value="@db.Kisi.FirstOrDefault(x=> x.id == item.KisiId).id">
+                                                                        @db.Kisi.FirstOrDefault(x=> x.id == item.KisiId).Ad
+                                                                        @db.Kisi.FirstOrDefault(x=> x.id == item.KisiId).Soyad
+                                                                    </option>
+                                                                @foreach (Kisi itemmm in db.Kisi.ToList())
+                                                                {
+                                                                    <option value="@itemmm.id">@itemmm.Ad @itemmm.Soyad</option>
+
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-6">
+                                                            <label>Hayvan Kategorisini Seçiniz</label>
+                                                            <select class="form-control single-select select2-hidden-accessible" name="KategoriId" required>
+                                                                    <option value="@db.Kategori.FirstOrDefault(x=> x.id == item.KategoriId).id"> @db.Kategori.FirstOrDefault(x=> x.id == item.KategoriId).Ad</option>
+                                                                @foreach (Kategori itemm in db.Kategori.ToList())
+                                                                {
+                                                                    <option value="@itemm.id">@itemm.Ad - @itemm.Aciklama</option>
+
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label>Doğum Yılı</label>
+                                                                <input type="date" class="form-control" name="DogumTarihi" value="@Convert.ToDateTime(item.DogumTarihi).ToString("yyyy-MM-dd")" required>
+                                                        </div>
+
+                                                        <div class="form-group col-lg-6">
+                                                            <label>Hayvanın Cinsi</label>
+                                                            <input type="text" class="form-control" name="Cinsi" value="@item.Cinsi" required>
+                                                        </div>
+
+                                                        <div class="form-group col-lg-6">
+                                                            <label>Hayvanın Adı</label>
+                                                            <input type="text" class="form-control" value="@item.Adi" name="Adi" required>
+                                                        </div>
+
+                                                        <div class="form-group col-lg-6">
+                                                            <label>Hayvanın Kimlik Numarası</label>
+                                                            <input type="text" class="form-control" value="@item.KimlikNo" name="KimlikNo" required>
+                                                        </div>
+
+                                                        <div class="form-group col-lg-12">
+                                                            <label>Hayvan Hakkında Alınan Notlar</label>
+                                                            <textarea rows="8" class="form-control" id="basic-textarea" name="NotBilgisi">@item.NotBilgisi</textarea>
+                                                        </div>
+
+                                                    </div>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times"></i> Kapat </button>
+                                                        <button type="submit" class="btn btn-success"><i class="fa fa-check-square-o"></i> Kaydet </button>
+                                                    </div>
+                                                </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#@Sil">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                        <div class="modal fade" id="@Sil">
+                                            <div class="modal-dialog modal-lg">
+                                                <form action="/Hayvanlar/HayvanSil/" method="post">
+                                                    <input type="text" class="form-control" value="@item.id" name="id" hidden>
+
+                                                    <div class="modal-content border-danger">
+                                                        <div class="modal-header bg-danger">
+                                                            <h5 class="modal-title text-white">@item.Adi bilgilerini kalıcı olarak silmek istediğinizden emin misiniz?</h5>
+                                                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="form-group col-6">
+                                                                    <label>Hayvanın Sahibini Seçiniz</label>
+                                                                    <select class="form-control single-select select2-hidden-accessible" name="KisiId" required>
+                                                                        <option value="@db.Kisi.FirstOrDefault(x=> x.id == item.KisiId).id">
+                                                                            @db.Kisi.FirstOrDefault(x=> x.id == item.KisiId).Ad
+                                                                            @db.Kisi.FirstOrDefault(x=> x.id == item.KisiId).Soyad
+                                                                        </option>
+                                                                        @foreach (Kisi itemmm in db.Kisi.ToList())
+                                                                        {
+                                                                            <option value="@itemmm.id">@itemmm.Ad @itemmm.Soyad</option>
+
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group col-6">
+                                                                    <label>Hayvan Kategorisini Seçiniz</label>
+                                                                    <select class="form-control single-select select2-hidden-accessible" name="KategoriId" required>
+                                                                        <option value="@db.Kategori.FirstOrDefault(x=> x.id == item.KategoriId).id"> @db.Kategori.FirstOrDefault(x=> x.id == item.KategoriId).Ad</option>
+                                                                        @foreach (Kategori itemm in db.Kategori.ToList())
+                                                                        {
+                                                                            <option value="@itemm.id">@itemm.Ad - @itemm.Aciklama</option>
+
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group col-lg-6">
+                                                                    <label>Doğum Yılı</label>
+                                                                    <input type="date" class="form-control" name="DogumTarihi" value="@Convert.ToDateTime(item.DogumTarihi).ToString("yyyy-MM-dd")" required>
+                                                                </div>
+
+                                                                <div class="form-group col-lg-6">
+                                                                    <label>Hayvanın Cinsi</label>
+                                                                    <input type="text" class="form-control" name="Cinsi" value="@item.Cinsi" required>
+                                                                </div>
+
+                                                                <div class="form-group col-lg-6">
+                                                                    <label>Hayvanın Adı</label>
+                                                                    <input type="text" class="form-control" value="@item.Adi" name="Adi" required>
+                                                                </div>
+
+                                                                <div class="form-group col-lg-6">
+                                                                    <label>Hayvanın Kimlik Numarası</label>
+                                                                    <input type="text" class="form-control" value="@item.KimlikNo" name="KimlikNo" required>
+                                                                </div>
+
+                                                                <div class="form-group col-lg-12">
+                                                                    <label>Hayvan Hakkında Alınan Notlar</label>
+                                                                    <textarea rows="8" class="form-control" id="basic-textarea" name="NotBilgisi">@item.NotBilgisi</textarea>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times"></i> Kapat </button>
+                                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Evet Sil </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

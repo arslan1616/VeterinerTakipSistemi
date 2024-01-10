@@ -1,0 +1,27 @@
+﻿@using Veteriner.DataBase;
+
+@{
+    ViewData["Title"] = "Home Page";
+    ApplicationConnectionDb db = new ApplicationConnectionDb();
+}
+
+<div class="row pt-2 pb-2">
+    <div class="col-sm-9">
+        <h4 class="page-title">
+            @*Başlık*@ Karşılama Sayfası
+        </h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+                @*Detay*@ Bu sayfa üzerinde genel içeriklere göz atabilirsiniz.
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-3">
+        <div class="btn-group float-sm-right">
+            <a href="#" class="btn btn-light">
+                <i class="fa fa-backward"></i>
+                @*Button*@
+            </a>
+        </div>
+    </div>
+</div>

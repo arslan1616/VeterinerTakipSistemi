@@ -1,0 +1,147 @@
+﻿@using Veteriner.DataBase;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ApplicationConnectionDb db = new ApplicationConnectionDb();
+}
+<div class="row pt-2 pb-2">
+    <div class="col-sm-9">
+        <h4 class="page-title">
+            @*Başlık*@ Kategori Listeleme Sayfası
+        </h4>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+                @*Detay*@ Bu sayfa üzerinde kategorileri listeleyebilirsiniz.
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-3">
+        <div class="btn-group float-sm-right">
+            <a href="/Kategoriler/Yeni/" class="btn btn-light">
+                <i class="fa fa-plus"></i>
+                @*Button*@ Yeni Ekle
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header"><i class="fa fa-building"></i> Kategori Listesi</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="default-datatable" class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Ad</th>
+                                <th scope="col">Açıklaması</th>
+                                <th scope="col">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Kategori item in db.Kategori.ToList())
+                            {
+                                string duz = "duz" + item.id;
+                                string sil = "sil" + item.id;
+
+                                <tr>
+                                    <td scope="row">@item.Ad</td>
+                                    <td scope="row">@item.Aciklama</td>
+                                    <td scope="row">
+
+                                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#@duz">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#@sil">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@foreach (Kategori item in db.Kategori.ToList())
+{
+    string duz = "duz" + item.id;
+    string sil = "sil" + item.id;
+
+    <div class="modal fade" id="@duz">
+        <div class="modal-dialog modal-lg">
+            <form action="/Kategoriler/KategoriDuzenle/" method="post">
+                <input type="text" class="form-control" value="@item.id" name="id" hidden>
+                <div class="modal-content border-success">
+                    <div class="modal-header bg-success">
+                        <h5 class="modal-title text-white">Kategori Bilgilerini Düzenleyebilirsiniz</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="form-group col-lg-12">
+                                    <label>Kategori Adı</label>
+                                    <input type="text" class="form-control" value="@item.Ad" name="Ad">
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <label>Kategori Açıklaması</label>
+                                    <textarea rows="4" class="form-control" id="basic-textarea" name="Aciklama">@item.Aciklama</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times"></i> Kapat</button>
+                        <button type="submit" class="btn btn-success"><i class="fa fa-check-square-o"></i> Kaydet </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="@sil">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content border-danger">
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title text-white">Kalıcı olarak silinecek. Emin misiniz?</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-lg-12">
+                            <label>Kategori Adı</label>
+                            <input type="text" class="form-control" value="@item.Ad" name="Ad" readonly>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label>Kategori Açıklaması</label>
+                            <textarea rows="4" class="form-control" id="basic-textarea" name="Aciklama" readonly>@item.Aciklama</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times"></i> Kapat</button>
+@*                    <button type="button" class="btn btn-danger"><i class="fa fa-check-square-o"></i> Evet Sil</button>
+                *@                    <a href="/Kategoriler/KategoriSil/@item.id" class="btn btn-danger"><i class="fa fa-check-square-o"></i> Evet Sil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
